@@ -15,7 +15,7 @@ UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Configure generative AI
-genai.configure(api_key='AIzaSyAs5_WHo7NXArFquWU0Zpe1sOX7Bkzkp2A')
+genai.configure(api_key='')
 session_id=uuid4().__str__()
 # Initialize generative model for chat
 safety_settings = [
@@ -33,13 +33,13 @@ modelvision=genai.GenerativeModel(model_name='gemini-pro-vision',safety_settings
 
 def add_db(user_input,bot_reply,lang):
     mydb = mysql.connector.connect(
-    host="firdouzov.mysql.pythonanywhere-services.com",
-    user="firdouzov",
-    password="Elantra_2017*",
-    database="firdouzov$messages"
+    host="",
+    user="",
+    password="",
+    database=""
     )
     mycursor = mydb.cursor()
-    sql=f"""INSERT INTO messages(user_message,bot_reply,lang) VALUES ("%s","%s","%s");""" % (user_input,bot_reply,lang)
+    sql=f"""""" % ()
     mycursor.execute(sql)
     mydb.commit()
 
