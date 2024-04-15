@@ -1,0 +1,364 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Demogouge</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+        <link rel="icon" type="image/x-icon" href="images/favicon.png">
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+                <div id="intro">
+                    <h1>Demogouge<br />
+                    Bot</h1>
+                    <p>Demogouge is the AI bot that can speak with your language as answer questions over text and image content, describe pictures as you like. Bot is supported by Gemini Pro and Gemini Vision Pro models.</p>
+                    <ul class="actions">
+                        <li><a href="#header" class="button icon solid solo fa-arrow-down scrolly">Continue</a></li>
+                    </ul>
+                </div>
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">Demogouge</a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li class="active"><a href="index.html">Bot</a></li>
+                            <li class="deactive"><a href="generic.html">Instructions</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="https://www.facebook.com/profile.php?id=100004162278825" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+							<li><a href="https://www.instagram.com/firdouzov/" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+                            <li><a href="https://www.linkedin.com/in/firdouzov/" class="icon brands fa-linkedin"><span class="label">Linkedin</span></a></li>
+							<li><a href="https://github.com/firdouzov" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post">
+                                <div class="chat-box-header">
+                                    <div class="header-content">
+                                        <img src="demogouge_pp.jpg" alt="Bot Profile Photo" class="bot-profile-photo">
+                                        <div class="text-container">
+                                            <h2>Demogouge</h2>
+                                            <p class="online-text">AI Chat Bot</p> <!-- "Online" text below "Demogouge" text -->
+                                        </div>
+                                        <div class="language-selection">
+                                            <select id="language-select">
+                                                <option value="en">English</option>
+                                                <option value="az">Azerbaijani</option>
+                                                <option value="tr">Turkish</option>
+                                                <option value="ru">Russian</option>
+                                                <option value="fr">French</option>
+                                                <option value="es">Spanish</option>
+                                                <option value="ge">German</option>
+                                                <option value="cn">Chinese</option>
+                                                <option value="ar">Arabic</option>
+                                                <option value="hi">Hindi</option>
+                                                <option value="bn">Bengali</option>
+                                                <option value="it">Italian</option>
+                                                <option value="bg">Bulgarian</option>
+                                                <option value="cs">Czech</option>
+                                                <option value="da">Danish</option>
+                                                <option value="ni">Dutch</option>
+                                                <!-- Add more options for other languages as needed -->
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+								<div class="chat-container">
+									<div class="chat-box" id="chat-box"></div>
+									<form id="chat-form" enctype="multipart/form-data">
+										<div class="chat-input-container">
+											<input type="text" class="chat-input" id="user-input" placeholder="Type a message...">
+                                            <label for="attachment-input" class="attachment-label">
+                                                <i class="fas fa-paperclip"></i> Attach File
+                                            </label>
+                                            <input type="file" id="attachment-input" class="attachment-input" accept="image/*">
+                                            <button type="submit" class="send-button"><i class="fas fa-paper-plane"></i></button>
+										</div>
+									</form>
+
+								</div>
+							</section>
+					</div>
+
+
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; Aydin Firdouzov</li><li>Design: <a href="https://html5up.net">HTML5 UP || Aydin Firdouzov</a></li></ul>
+					</div>
+
+			</div>
+
+
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+            <script>
+                const chatBox = document.getElementById('chat-box');
+                const chatForm = document.getElementById('chat-form');
+                const userInput = document.getElementById('user-input');
+                const attachmentInput = document.getElementById('attachment-input');
+
+                function appendMessage(message, sender) {
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+
+                    // Create profile picture element
+                    const profilePicture = document.createElement('img');
+                    profilePicture.src = (sender === 'user') ? "user_pp.jpg" : "demogouge_pp.jpg";
+                    profilePicture.alt = (sender === 'user') ? "Me" : "Demogouge";
+                    profilePicture.classList.add('profile-picture');
+
+                    // Create message content element
+                    const messageContent = document.createElement('div');
+
+                    // Check if the message contains an image
+                    if (message.startsWith('<img')) {
+                        messageContent.innerHTML = message;
+                    } else {
+                        messageContent.textContent = message;
+                    }
+
+                    // Append profile picture and message content based on sender
+                    if (sender === 'user') {
+                        messageElement.classList.add('user-message');
+                        messageElement.appendChild(messageContent); // Append message content first
+                        messageElement.appendChild(profilePicture); // Append profile picture second
+                    } else {
+                        messageElement.classList.add('bot-message');
+                        messageElement.insertBefore(profilePicture, messageElement.firstChild);
+                        messageElement.appendChild(messageContent);
+                    }
+
+                    chatBox.appendChild(messageElement);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+
+                function showTyping() {
+                    const typingElement = document.createElement('div');
+                    typingElement.classList.add('message');
+                    typingElement.classList.add('bot-message');
+
+                    // Create bot's profile picture element
+                    const botProfilePicture = document.createElement('img');
+                    botProfilePicture.src = "demogouge_pp.jpg"; // Path to the bot's profile picture
+                    botProfilePicture.alt = "Demogouge";
+                    botProfilePicture.classList.add('profile-picture');
+
+                    // Append bot's profile picture before the "Typing..." message
+                    typingElement.appendChild(botProfilePicture);
+
+                    // Add "Typing..." text
+                    const typingText = document.createElement('span');
+                    typingText.innerText = 'Typing...';
+                    typingElement.appendChild(typingText);
+
+                    chatBox.appendChild(typingElement);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+
+
+
+
+                function hideTyping() {
+                    const typingElement = chatBox.querySelector('.bot-message:last-child');
+                        typingElement.remove();
+                }
+
+                // Function to send user input and selected language to the backend
+                function sendMessage(message, selectedLanguage) {
+                    appendMessage(message, 'user');
+                    userInput.value = '';
+                    showTyping(); // Display 'typing...' message before sending the message
+                    fetch('/send_message', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ user_input: message, language: selectedLanguage }) // Include selected language value
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        hideTyping(); // Remove 'typing...' message after receiving the response
+                        botResponse(data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        hideTyping(); // Remove 'typing...' message in case of an error
+                        appendMessage("There was error while generating content. It may cause several reasons, please check your language selection if it's compatible your input message.", 'bot');
+                    });
+                }
+
+                // Event listener for form submission
+
+
+                function appendImage(imageUrl, caption = '') {
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+                    messageElement.classList.add('user-message');
+                    chatBox.appendChild(messageElement);
+
+                    if (caption) {
+                        const captionElement = document.createElement('div');
+                        messageElement.appendChild(captionElement);
+                        captionElement.innerText = caption;
+                    }
+
+                    const imageElement = document.createElement('img');
+                    imageElement.src = imageUrl;  // Use the provided imageUrl
+                    imageElement.style.width = '200px'; // Adjust width as desired
+                    imageElement.style.height = 'auto'; // Maintain aspect ratio
+                    messageElement.appendChild(imageElement);
+
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+
+                function appendError(errorMessage) {
+                    const errorElement = document.createElement('div');
+                    errorElement.classList.add('message');
+                    errorElement.classList.add('bot-message');
+                    errorElement.innerText = errorMessage;
+                    chatBox.appendChild(errorElement);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+
+                function botResponse(data) {
+                    if (data && data.response && data.type) {
+                        if (data.type === 1) {
+                            appendMessage(data.response, 'bot');
+                        } else if (data.type === 2 || data.type === 3) {
+                            appendMessage(data.response, 'bot');
+                        }
+                    } else if (data && data.error) {
+                        appendError(data.error); // Display error message if there is an error
+                    } else {
+                        console.error('Invalid bot response:', data);
+                    }
+                }
+
+                chatForm.addEventListener('submit', function(event) {
+                    event.preventDefault(); // Prevent default form submission
+                    const message = userInput.value.trim();
+                    const file = attachmentInput.files[0]; // Get the file data
+                    if (file) {
+                        const formData = new FormData();
+                        const selectedLanguage = document.getElementById('language-select').value;
+                        formData.append('file', file);
+                        formData.append('language',selectedLanguage)
+                        if (message) {
+                            formData.append('caption', message); // Pass the caption along with the file if it exists
+                        }
+                        appendImageAndCaption(file, message || '');
+
+                        // Wait for 5 seconds
+                        setTimeout(function() {
+                            showTyping();
+                        }, 1000); // 5000 milliseconds = 5 seconds // Display 'typing...' message after appending the image
+
+                        // Make the fetch request after showing the "typing..." message
+                        fetch('/upload_image', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            hideTyping(); // Remove 'typing...' message after receiving the response
+                            botResponse(data); // Display bot response after receiving it
+                            if (data.error) {
+                                appendError(data.error); // Display error message if there is an error
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            hideTyping(); // Remove 'typing...' message in case of an error
+                            appendMessage('Error while uploading image, please try again.', 'bot');
+                        });
+                    } else {
+                        // If no file is selected, simply send the text message
+                        if (message !== '') {
+                            const selectedLanguage = document.getElementById('language-select').value;
+                            sendMessage(message,selectedLanguage);
+
+                        }
+                    }
+                    // Reset the form after submission
+                    this.reset();
+                });
+
+                function appendImageAndCaption(file, caption) {
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+                    messageElement.classList.add('user-message');
+                    chatBox.appendChild(messageElement);
+
+                    // Create a container for the caption and image
+                    const captionAndImageContainer = document.createElement('div');
+                    captionAndImageContainer.style.textAlign = 'right'; // Align the caption and image to the right
+                    messageElement.appendChild(captionAndImageContainer);
+
+                    // Create caption element
+                    const captionElement = document.createElement('div');
+                    captionElement.textContent = caption;
+                    captionAndImageContainer.appendChild(captionElement); // Append caption to the container
+
+                    // Create image element
+                    const imageElement = document.createElement('img');
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        imageElement.src = event.target.result;
+                        imageElement.style.width = '200px'; // Adjust width as desired
+                        imageElement.style.height = 'auto'; // Maintain aspect ratio
+                    };
+                    reader.readAsDataURL(file);
+
+                    // Append image to the container
+                    captionAndImageContainer.appendChild(imageElement);
+
+                    // Create user profile picture
+                    const userProfilePicture = document.createElement('img');
+                    userProfilePicture.src = "user_pp.jpg"; // Assuming this is the path to the user's profile picture
+                    userProfilePicture.alt = "User";
+                    userProfilePicture.classList.add('profile-picture');
+                    userProfilePicture.style.width = '30px'; // Adjust width as desired
+                    userProfilePicture.style.height = '30px'; // Adjust height as desired
+                    messageElement.appendChild(userProfilePicture);
+
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+
+
+
+
+
+
+
+
+
+            </script>
+
+	</body>
+</html>

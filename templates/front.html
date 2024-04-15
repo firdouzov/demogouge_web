@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chatbot</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+    .chat-container {
+        max-width: 400px;
+        margin: 50px auto;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .chat-box {
+        height: 300px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .chat-input-container {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-top: 1px solid #ccc;
+    }
+    .chat-input {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        outline: none;
+    }
+    .submit-button {
+        padding: 10px 20px;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+    }
+    .user-message::before,
+    .bot-message::before {
+        font-weight: bold;
+    }
+    .user-message::before {
+        content: 'Me: ';
+    }
+    .bot-message::before {
+        content: 'Demogouge: ';
+    }
+</style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box"></div>
+        <form id="chat-form" enctype="multipart/form-data">
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="user-input" placeholder="Type a message...">
+                <input type="file" id="attachment-input" accept="image/*">
+                <button type="submit" class="submit-button">Send</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+        const attachmentInput = document.getElementById('attachment-input');
+    
+        function appendMessage(message, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            if (sender === 'user') {
+                messageElement.classList.add('user-message');
+            } else {
+                messageElement.classList.add('bot-message');
+            }
+            messageElement.innerText = message;
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    
+        function showTyping() {
+            const typingElement = document.createElement('div');
+            typingElement.classList.add('message');
+            typingElement.classList.add('bot-message');
+            typingElement.innerText = 'Typing...';
+            chatBox.appendChild(typingElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    
+        function hideTyping() {
+            const typingElement = chatBox.querySelector('.bot-message:last-child');
+            if (typingElement && typingElement.innerText === 'Typing...') {
+                typingElement.remove();
+            }
+        }
+    
+        function sendMessage(message) {
+            appendMessage(message, 'user');
+            userInput.value = '';
+            showTyping(); // Display 'typing...' message before sending the message
+            fetch('/send_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_input: message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideTyping(); // Remove 'typing...' message after receiving the response
+                botResponse(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                hideTyping(); // Remove 'typing...' message in case of an error
+                appendMessage('Error while sending message, please try again.', 'bot');
+            });
+        }
+    
+        function appendImage(imageUrl, caption = '') {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.classList.add('user-message');
+            chatBox.appendChild(messageElement);
+    
+            if (caption) {
+                const captionElement = document.createElement('div');
+                messageElement.appendChild(captionElement);
+                captionElement.innerText = caption;
+            }
+    
+            const imageElement = document.createElement('img');
+            imageElement.src = imageUrl;  // Use the provided imageUrl
+            imageElement.style.width = '200px'; // Adjust width as desired
+            imageElement.style.height = 'auto'; // Maintain aspect ratio
+            messageElement.appendChild(imageElement);
+    
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    
+        function appendError(errorMessage) {
+            const errorElement = document.createElement('div');
+            errorElement.classList.add('message');
+            errorElement.classList.add('bot-message');
+            errorElement.innerText = errorMessage;
+            chatBox.appendChild(errorElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    
+        function botResponse(data) {
+            if (data && data.response && data.type) {
+                if (data.type === 1) {
+                    appendMessage(data.response, 'bot');
+                } else if (data.type === 2 || data.type === 3) {
+                    appendMessage(data.response, 'bot');
+                }
+            } else if (data && data.error) {
+                appendError(data.error); // Display error message if there is an error
+            } else {
+                console.error('Invalid bot response:', data);
+            }
+        }
+    
+        chatForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            const message = userInput.value.trim();
+            const file = attachmentInput.files[0]; // Get the file data
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+                if (message) {
+                    formData.append('caption', message); // Pass the caption along with the file if it exists
+                }
+                appendImageAndCaption(file, message || '');
+
+                // Wait for 5 seconds
+                setTimeout(function() {
+                    showTyping();
+                }, 1000); // 5000 milliseconds = 5 seconds // Display 'typing...' message after appending the image
+
+                // Make the fetch request after showing the "typing..." message
+                fetch('/upload_image', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    hideTyping(); // Remove 'typing...' message after receiving the response
+                    botResponse(data); // Display bot response after receiving it
+                    if (data.error) {
+                        appendError(data.error); // Display error message if there is an error
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    hideTyping(); // Remove 'typing...' message in case of an error
+                    appendMessage('Error while uploading image, please try again.', 'bot');
+                });
+            } else {
+                // If no file is selected, simply send the text message
+                if (message !== '') {
+                    sendMessage(message);
+                }
+            }
+            // Reset the form after submission
+            this.reset();
+        });
+    
+        function appendImageAndCaption(file, caption) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const imageUrl = event.target.result;
+                appendImage(imageUrl, caption);
+            };
+            reader.readAsDataURL(file);
+        }
+    
+    </script>
+    
+
+</body>
+</html>
