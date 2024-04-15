@@ -91,9 +91,6 @@ If the image has not any caption I will reply back with the last language you us
 <a href="" align="left">
     <img src="templates/images/phone_037.png" alt="Logo" width="300" height="550">
   </a>
-<a href="" align="right">
-    <img src="templates/images/phone_038.png" alt="Logo" width="300" height="550">
-  </a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
