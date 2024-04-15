@@ -106,6 +106,6 @@ If the image has not any caption I will reply back with the last language you us
 
 Aydin Firdouzov - [Linkedin](https://linkedin.com/in/firdouzov) - aydin.firdouzov@gmail.com
 
-Project Link: [Demogouge](demogouge.online)
+Project Link: [Demogouge](https://demogouge.online)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
