@@ -83,16 +83,16 @@ In order to deploy the bot, [PythonAnywhere](https://www.pythonanywhere.com/) is
 If the image has not any caption I will reply back with the last language you used. If any language is not recognized yet, by default I will reply with English. 
 
 <a href="" align="left">
-    <img src="templates/images/phone_035.png" alt="Logo" width="200" height="550">
+    <img src="templates/images/phone_035.png" alt="Logo" width="300" height="550">
   </a>
 <a href="" align="right">
-    <img src="templates/images/phone_036.png" alt="Logo" width="200" height="550">
+    <img src="templates/images/phone_036.png" alt="Logo" width="300" height="550">
   </a>
 <a href="" align="left">
-    <img src="templates/images/phone_037.png" alt="Logo" width="200" height="550">
+    <img src="templates/images/phone_037.png" alt="Logo" width="300" height="550">
   </a>
 <a href="" align="right">
-    <img src="templates/images/phone_038.png" alt="Logo" width="200" height="550">
+    <img src="templates/images/phone_038.png" alt="Logo" width="300" height="550">
   </a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
