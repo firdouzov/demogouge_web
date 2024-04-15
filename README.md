@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="">
-    <img src="images/logo.jfif" alt="Logo" width="320" height="320">
+    <img src="templates/images/logo.jfif" alt="Logo" width="320" height="320">
   </a>
 
   <h3 align="center">Demogouge</h3>
